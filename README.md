@@ -95,7 +95,7 @@ cp application.properties.example src/main/resources/application.properties
 
 > ⚠️ `application.properties` está en `.gitignore`: **nunca se publica**. El repositorio solo contiene la plantilla `application.properties.example` sin valores reales.
 
-### Ejecución
+### Cómo ejecutar
 
 ```bash
 ./mvnw.cmd spring-boot:run    # Windows (o ./mvnw spring-boot:run en Linux/macOS)
@@ -245,6 +245,21 @@ Cada captura describe con texto qué se observa; los mensajes de error no depend
 ## Nota sobre uso de IA
 
 El asistente de IA se usó para **comprender y diagnosticar**, no para copiar soluciones: analogías de las capas controller/service/repository, revisión de cardinalidades y DTO, hipótesis sobre recursión JSON, contraste de las reglas de fecha y horario, auditoría de rutas y roles frente a la regla USER/ADMIN, y revisión de validaciones ausentes. Cada sugerencia se **verificó contra el comportamiento real de VetTurno** ejecutando las pruebas de esta matriz; los errores encontrados (por ejemplo, el 403 que se convertía en 401) se corrigieron y se documentaron con la respuesta HTTP real.
+
+## Historial en Git
+
+Cada parte del taller corresponde a un commit verificable en el repositorio:
+
+| Commit | Contenido |
+|---|---|
+| [`a059b98`](https://github.com/JuanezAC/VetTurno/commit/a059b98) | Base del taller y proyecto inicial |
+| [`59ee195`](https://github.com/JuanezAC/VetTurno/commit/59ee195) | Parte 1: proyecto Maven con Java 17, dependencias y paquetes |
+| [`a6190d3`](https://github.com/JuanezAC/VetTurno/commit/a6190d3) | Parte 2: entidades JPA y repositorios |
+| [`68ebcc6`](https://github.com/JuanezAC/VetTurno/commit/68ebcc6) | Parte 3: flujo REST con DTO, services y controllers |
+| [`b40312e`](https://github.com/JuanezAC/VetTurno/commit/b40312e) | Parte 4: agenda de citas con fecha futura y horario duplicado |
+| [`0a3159b`](https://github.com/JuanezAC/VetTurno/commit/0a3159b) | Parte 5: autenticación JWT con roles USER/ADMIN |
+| [`ddc8cf8`](https://github.com/JuanezAC/VetTurno/commit/ddc8cf8) | Parte 6: validaciones y manejador global de errores |
+| [`9b995cb`](https://github.com/JuanezAC/VetTurno/commit/9b995cb) | Parte 7: Swagger, matriz de pruebas y evidencias |
 
 ## Decisiones de diseño
 

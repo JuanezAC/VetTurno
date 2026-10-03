@@ -4,8 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.ErrorResponseException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -75,11 +78,32 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(cuerpo);
     }
 
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<ApiError> manejarTipoContenido(HttpMediaTypeNotSupportedException ex) {
+        ApiError cuerpo = new ApiError(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(),
+                "Content-Type no soportado: envíe application/json", null);
+        return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(cuerpo);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ApiError> manejarMetodoNoSoportado(HttpRequestMethodNotSupportedException ex) {
+        ApiError cuerpo = new ApiError(HttpStatus.METHOD_NOT_ALLOWED.value(),
+                "Método HTTP no soportado para este recurso", null);
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(cuerpo);
+    }
+
     @ExceptionHandler(ErrorResponseException.class)
     public ResponseEntity<ApiError> manejarErrorHttp(ErrorResponseException ex) {
         int status = ex.getStatusCode().value();
         ApiError cuerpo = new ApiError(status, "La solicitud no pudo procesarse", null);
         return ResponseEntity.status(status).body(cuerpo);
+    }
+
+    @ExceptionHandler(RequestRejectedException.class)
+    public ResponseEntity<ApiError> manejarSolicitudRechazada(RequestRejectedException ex) {
+        ApiError cuerpo = new ApiError(HttpStatus.BAD_REQUEST.value(),
+                "La solicitud fue rechazada: formato no válido", null);
+        return ResponseEntity.badRequest().body(cuerpo);
     }
 
     @ExceptionHandler(Exception.class)
