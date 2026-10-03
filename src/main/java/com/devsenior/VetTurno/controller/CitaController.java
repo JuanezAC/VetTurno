@@ -6,6 +6,7 @@ import com.devsenior.VetTurno.model.Cita;
 import com.devsenior.VetTurno.model.Mascota;
 import com.devsenior.VetTurno.model.Veterinario;
 import com.devsenior.VetTurno.service.CitaService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,7 @@ public class CitaController {
     }
 
     @PostMapping
-    public ResponseEntity<CitaDTO> agendarCita(@RequestBody CitaRequest req) {
+    public ResponseEntity<CitaDTO> agendarCita(@Valid @RequestBody CitaRequest req) {
         Cita c = new Cita();
         c.setFechaHora(req.getFechaHora());
         c.setMotivo(req.getMotivo());

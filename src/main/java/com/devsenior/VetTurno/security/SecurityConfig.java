@@ -1,5 +1,7 @@
 package com.devsenior.VetTurno.security;
 
+import tools.jackson.databind.ObjectMapper;
+import com.devsenior.VetTurno.exception.ApiError;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,9 +25,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final ObjectMapper objectMapper;
 
-    public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
+    public SecurityConfig(JwtAuthFilter jwtAuthFilter, ObjectMapper objectMapper) {
         this.jwtAuthFilter = jwtAuthFilter;
+        this.objectMapper = objectMapper;
     }
 
     @Bean
@@ -42,12 +46,16 @@ public class SecurityConfig {
                 .authenticationEntryPoint((request, response, authException) -> {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.setContentType("application/json");
-                    response.getWriter().write("{\"message\":\"Autenticacion requerida: envie Authorization: Bearer <token>\"}");
+                    response.getWriter().write(objectMapper.writeValueAsString(new ApiError(
+                            HttpServletResponse.SC_UNAUTHORIZED,
+                            "Autenticacion requerida: envie Authorization: Bearer <token>", null)));
                 })
                 .accessDeniedHandler((request, response, accessDeniedException) -> {
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                     response.setContentType("application/json");
-                    response.getWriter().write("{\"message\":\"Acceso denegado: no tiene permiso para este recurso\"}");
+                    response.getWriter().write(objectMapper.writeValueAsString(new ApiError(
+                            HttpServletResponse.SC_FORBIDDEN,
+                            "Acceso denegado: no tiene permiso para este recurso", null)));
                 }))
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

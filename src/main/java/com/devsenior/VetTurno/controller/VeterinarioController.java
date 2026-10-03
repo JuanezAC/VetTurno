@@ -4,6 +4,7 @@ import com.devsenior.VetTurno.dto.VeterinarioDTO;
 import com.devsenior.VetTurno.dto.VeterinarioRequest;
 import com.devsenior.VetTurno.model.Veterinario;
 import com.devsenior.VetTurno.service.VeterinarioService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class VeterinarioController {
     }
 
     @PostMapping
-    public ResponseEntity<VeterinarioDTO> crearVeterinario(@RequestBody VeterinarioRequest req) {
+    public ResponseEntity<VeterinarioDTO> crearVeterinario(@Valid @RequestBody VeterinarioRequest req) {
         Veterinario v = new Veterinario();
         v.setNombre(req.getNombre());
         v.setEspecialidad(req.getEspecialidad());

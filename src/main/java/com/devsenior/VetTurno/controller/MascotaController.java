@@ -5,6 +5,7 @@ import com.devsenior.VetTurno.dto.MascotaRequest;
 import com.devsenior.VetTurno.model.Mascota;
 import com.devsenior.VetTurno.model.Propietario;
 import com.devsenior.VetTurno.service.MascotaService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class MascotaController {
     }
 
     @PostMapping
-    public ResponseEntity<MascotaDTO> crearMascota(@RequestBody MascotaRequest req) {
+    public ResponseEntity<MascotaDTO> crearMascota(@Valid @RequestBody MascotaRequest req) {
         Mascota m = new Mascota();
         m.setNombre(req.getNombre());
         m.setEspecie(req.getEspecie());

@@ -1,5 +1,6 @@
 package com.devsenior.VetTurno.service;
 
+import com.devsenior.VetTurno.exception.NegocioException;
 import com.devsenior.VetTurno.model.Mascota;
 import com.devsenior.VetTurno.model.Propietario;
 import com.devsenior.VetTurno.repository.MascotaRepository;
@@ -7,7 +8,6 @@ import com.devsenior.VetTurno.repository.PropietarioRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class MascotaService {
@@ -34,7 +34,7 @@ public class MascotaService {
                 && mascota.getPropietario().getId() != null) {
             Propietario propietario = propietarioRepository
                     .findById(mascota.getPropietario().getId())
-                    .orElseThrow(() -> new NoSuchElementException(
+                    .orElseThrow(() -> new NegocioException(
                             "Propietario no encontrado con id " + mascota.getPropietario().getId()));
             mascota.setPropietario(propietario);
         }

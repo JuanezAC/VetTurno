@@ -4,6 +4,7 @@ import com.devsenior.VetTurno.dto.PropietarioDTO;
 import com.devsenior.VetTurno.dto.PropietarioRequest;
 import com.devsenior.VetTurno.model.Propietario;
 import com.devsenior.VetTurno.service.PropietarioService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class PropietarioController {
     }
 
     @PostMapping
-    public ResponseEntity<PropietarioDTO> crearPropietario(@RequestBody PropietarioRequest req) {
+    public ResponseEntity<PropietarioDTO> crearPropietario(@Valid @RequestBody PropietarioRequest req) {
         Propietario p = new Propietario();
         p.setNombre(req.getNombre());
         p.setTelefono(req.getTelefono());
