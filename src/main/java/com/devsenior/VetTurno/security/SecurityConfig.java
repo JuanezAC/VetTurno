@@ -17,8 +17,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 /**
  * Configuración de seguridad — Parte 5.
- * Rutas públicas: únicamente /api/auth/** (registro y login).
- * Todo lo demás exige JWT. POST /api/veterinarios solo ADMIN.
+ * Rutas públicas: /api/auth/** (registro y login) y las rutas
+ * técnicas de Swagger UI/OpenAPI. Todo lo demás exige JWT.
+ * POST /api/veterinarios solo ADMIN.
  * Sesiones stateless: cada petición presenta su propio Bearer token.
  */
 @Configuration
@@ -39,6 +40,8 @@ public class SecurityConfig {
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/swagger-ui.html", "/swagger-ui/**",
+                        "/v3/api-docs/**", "/webjars/**").permitAll()
                 .requestMatchers("/error").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/veterinarios").hasRole("ADMIN")
                 .anyRequest().authenticated())

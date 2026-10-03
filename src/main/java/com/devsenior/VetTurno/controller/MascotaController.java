@@ -5,6 +5,8 @@ import com.devsenior.VetTurno.dto.MascotaRequest;
 import com.devsenior.VetTurno.model.Mascota;
 import com.devsenior.VetTurno.model.Propietario;
 import com.devsenior.VetTurno.service.MascotaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/mascotas")
+@Tag(name = "Mascotas", description = "Registro de mascotas con su propietario")
 public class MascotaController {
     private final MascotaService mascotaService;
 
@@ -22,12 +25,14 @@ public class MascotaController {
     }
 
     @GetMapping
+    @Operation(summary = "Listar todas las mascotas")
     public List<MascotaDTO> obtenerMascotas() {
         return mascotaService.listarMascotas().stream()
                 .map(MascotaDTO::new).toList();
     }
 
     @PostMapping
+    @Operation(summary = "Crear una mascota con su propietario (requiere token)")
     public ResponseEntity<MascotaDTO> crearMascota(@Valid @RequestBody MascotaRequest req) {
         Mascota m = new Mascota();
         m.setNombre(req.getNombre());

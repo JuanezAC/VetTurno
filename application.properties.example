@@ -1,0 +1,25 @@
+# Plantilla de configuración local — copie este archivo a
+# src/main/resources/application.properties y complete sus valores.
+# El archivo application.properties real está en .gitignore y NUNCA se publica.
+
+spring.application.name=VetTurno
+
+spring.datasource.url=jdbc:mysql://localhost:3306/vetturno
+spring.datasource.username=SU_USUARIO_DE_MYSQL
+spring.datasource.password=SU_CONTRASENA_DE_MYSQL
+
+# update crea/ajusta el esquema automáticamente con Hibernate.
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+springdoc.swagger-ui.enabled=true
+
+# JWT: clave en Base64 de al menos 32 caracteres y expiración en milisegundos.
+# Genere una con: openssl rand -base64 48
+jwt.secret=COLOQUE_AQUI_SU_CLAVE_SECRETA_EN_BASE64
+jwt.expiracion-ms=3600000
+
+# Los errores HTTP no deben incluir trazas ni nombres de clases.
+server.error.include-stacktrace=never
+server.error.include-exception=false
+server.error.include-message=never

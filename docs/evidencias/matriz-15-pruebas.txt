@@ -1,0 +1,108 @@
+MATRIZ DE 15 PRUEBAS MANUALES - VetTurno (Parte 7)
+Fecha: 2026-10-02 20:20
+
+=== PRUEBA 1 - La aplicacion inicia con MySQL disponible ===
+Log de arranque:
+2026-10-02T20:18:48.243-05:00  INFO 6728 --- [VetTurno] [  restartedMain] c.d.VetTurno.VetTurnoApplication         : Started VetTurnoApplication in 5.518 seconds (process running for 6.004)
+Tables_in_vetturno
+citas
+mascotas
+propietarios
+usuarios
+veterinarios
+
+=== PRUEBA 2 - Registro valido de Paula - 200 y token; clave hasheada ===
+POST /api/auth/register (paula)
+{"token":"eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJwYXVsYUBodWVsbGl0YXMuY29tIiwiaWF0IjoxNzkwOTkwNDQ5LCJleHAiOjE3OTA5OTQwNDl9.yJtIgpB341ZfaNP6qgFJARGRIsHW6ezAmOga5lZ6xS8dziIQMqW6_23rEmZESLAx"}
+HTTP 200
+email	password_bcrypt
+paula@huellitas.com	$2a$10$mKQAL.Yvn9NCHa1qMmoOC.b
+
+=== PRUEBA 3 - Registro con email invalido y clave corta - 400 errores por campo ===
+POST /api/auth/register (invalido)
+{"status":400,"mensaje":"Los datos enviados no son v+ílidos","errores":{"password":"La contrase+¦a debe tener al menos 6 caracteres","email":"El email no tiene un formato v+ílido"},"timestamp":"2026-10-02T20:20:49.093261300"}
+HTTP 400
+
+=== PRUEBA 4 - Login con credenciales validas - 200 y JWT vigente ===
+POST /api/auth/login
+{"token":"eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJwYXVsYUBodWVsbGl0YXMuY29tIiwiaWF0IjoxNzkwOTkwNDQ5LCJleHAiOjE3OTA5OTQwNDl9.yJtIgpB341ZfaNP6qgFJARGRIsHW6ezAmOga5lZ6xS8dziIQMqW6_23rEmZESLAx"}
+HTTP 200
+
+=== PRUEBA 5 - GET /api/citas sin token - acceso rechazado ===
+GET /api/citas (sin token)
+{"status":401,"mensaje":"Autenticacion requerida: envie Authorization: Bearer <token>","errores":null,"timestamp":"2026-10-02T20:20:49.392297800"}
+HTTP 401
+
+=== PRUEBA 6 - POST /api/veterinarios con USER - 403 Forbidden ===
+POST /api/veterinarios (USER)
+{"status":403,"mensaje":"Acceso denegado: no tiene permiso para este recurso","errores":null,"timestamp":"2026-10-02T20:20:49.461276400"}
+HTTP 403
+
+=== PRUEBA 7 - POST /api/veterinarios con ADMIN - 201 y persistido ===
+POST /api/veterinarios (ADMIN)
+{"especialidad":"Oftalmologia","id":7,"nombre":"Dra. Sofia"}
+HTTP 201
+id	nombre	especialidad
+1	Dr. Andres	Cirugia
+2	Dra. Elena	Dermatologia
+3	Dr. Carlos	Cardiologia
+4	Dra. Elena	Dermatologia
+5	Dr. Carlos	Cardiologia
+6	Dr. Prueba P6	Dermatologia
+7	Dra. Sofia	Oftalmologia
+
+=== PRUEBA 8 - Creacion valida de propietario - 201 y DTO sin colecciones anidadas ===
+POST /api/propietarios
+{"email":"ana@huellitas.com","id":3,"nombre":"Ana Gomez","telefono":"300555"}
+HTTP 201
+
+=== PRUEBA 9 - Mascota con propietario existente - 201 y relacion correcta ===
+POST /api/mascotas (propietarioId=3)
+{"especie":"Perro","id":2,"nombre":"Toby","propietarioId":3,"propietarioNombre":"Ana Gomez","raza":"Labrador"}
+HTTP 201
+
+=== PRUEBA 10 - Mascota con propietario inexistente - 400 controlado, no se inserta fila ===
+rocky_antes
+0
+POST /api/mascotas (propietarioId=999)
+{"status":400,"mensaje":"Propietario no encontrado con id 999","errores":null,"timestamp":"2026-10-02T20:20:49.735753300"}
+HTTP 400
+rocky_despues
+0
+
+=== PRUEBA 11 - Cita futura con referencias validas - 201 y persistida ===
+POST /api/citas (futura)
+{"fechaHora":"2027-06-15T11:00:00","id":4,"mascota":{"id":1,"nombre":"Luna"},"motivo":"Vacunacion anual","propietario":{"id":1,"nombre":"Marta Ruiz"},"veterinario":{"id":1,"nombre":"Dr. Andres"}}
+HTTP 201
+id	fecha_hora	motivo
+4	2027-06-15 11:00:00.000000	Vacunacion anual
+
+=== PRUEBA 12 - Cita con fecha pasada - 400 con mensaje claro ===
+POST /api/citas (pasada)
+{"status":400,"mensaje":"Los datos enviados no son v+ílidos","errores":{"fechaHora":"La fecha de la cita debe ser futura"},"timestamp":"2026-10-02T20:20:49.889975300"}
+HTTP 400
+
+=== PRUEBA 13 - Segundo intento mismo veterinario y horario - 400; se conserva una sola cita ===
+POST /api/citas (duplicada)
+{"status":400,"mensaje":"El veterinario ya tiene una cita agendada en ese horario","errores":null,"timestamp":"2026-10-02T20:20:49.922923200"}
+HTTP 400
+citas_ese_horario
+1
+
+=== PRUEBA 14 - Filtro de citas por veterinario - 200 y solo coincidencias ===
+GET /api/citas/veterinario/1
+[{"fechaHora":"2026-10-15T10:00:00","id":1,"mascota":{"id":1,"nombre":"Luna"},"motivo":"Vacunacion anual","propietario":{"id":1,"nombre":"Marta Ruiz"},"veterinario":{"id":1,"nombre":"Dr. Andres"}},{"fechaHora":"2026-10-20T11:00:00","id":2,"mascota":{"id":1,"nombre":"Luna"},"motivo":"Control","propietario":{"id":1,"nombre":"Marta Ruiz"},"veterinario":{"id":1,"nombre":"Dr. Andres"}},{"fechaHora":"2027-03-15T10:00:00","id":3,"mascota":{"id":1,"nombre":"Luna"},"motivo":"Control","propietario":{"id":1,"nombre":"Marta Ruiz"},"veterinario":{"id":1,"nombre":"Dr. Andres"}},{"fechaHora":"2027-06-15T11:00:00","id":4,"mascota":{"id":1,"nombre":"Luna"},"motivo":"Vacunacion anual","propietario":{"id":1,"nombre":"Marta Ruiz"},"veterinario":{"id":1,"nombre":"Dr. Andres"}}]
+HTTP 200
+
+=== PRUEBA 15 - Reinicio y prueba - los datos persisten (Swagger con Authorize: pantallazo del usuario) ===
+total_citas
+4
+total_usuarios
+2
+
+Fin de la matriz.
+
+=== PRUEBA 15 (continuacion): reinicio real de la aplicacion ===
+Log de reinicio:
+2026-10-02T20:21:38.163-05:00  INFO 5324 --- [VetTurno] [  restartedMain] c.d.VetTurno.VetTurnoApplication         : Started VetTurnoApplication in 5.6 seconds (process running for 6.098)
+GET /api/citas con token tras reinicio: HTTP 200 - 4 citas (los datos persisten)
