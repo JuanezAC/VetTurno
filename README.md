@@ -234,11 +234,24 @@ Capturas en [`docs/evidencias/`](docs/evidencias/) con nombres descriptivos:
 |---|---|
 | `01-swagger-autorize.png` | Swagger UI con el título **VetTurno**, su descripción y el botón **Authorize** |
 | `02-swagger-flujo.png` | `POST /api/auth/login` ejecutado desde Swagger con respuesta 200 y token |
-| `03-400-multicampo.png` | Respuesta 400 con varios errores de campo (formato `ApiError`) |
-| `04-403-user-veterinarios.png` | POST `/api/veterinarios` con rol USER → 403 Forbidden |
-| `05-mysql-tablas.png` | Esquema `vetturno` con las 5 tablas |
+| `03-400-multicampo.png` | Respuesta 400 con varios errores de campo (formato `ApiError`) — matriz #3 |
+| `04-403-user-veterinarios.png` | POST `/api/veterinarios` con rol USER → 403 Forbidden — matriz #6 |
+| `05-mysql-tablas.png` | Esquema `vetturno` con las 5 tablas — matriz #1 |
 | `06-github-readme.png` | Repositorio publicado con este README visible |
+| `07-citas-sin-token.png` | `GET /api/citas` sin token → 401 — matriz #5 |
+| `08-registro-valido.png` | Registro válido con respuesta 200 y token — matriz #2 |
+| `09-hash-bcrypt.png` | Contraseña guardada como hash BCrypt (`$2a$10$...`) en MySQL — matriz #2 |
+| `10-propietario-201.png` | Creación válida de propietario → 201 con DTO plano — matriz #8 |
+| `11-mascota-relacion.png` | Mascota con propietario existente → 201 con relación — matriz #9 |
+| `12-mascota-400.png` | Mascota con propietario inexistente → 400 controlado — matriz #10 |
+| `13-cita-201.png` | Cita futura con referencias válidas → 201 persistida — matriz #11 |
+| `14-cita-duplicada-400.png` | Mismo veterinario y horario → 400 por duplicado — matriz #13 |
+| `15-cita-pasada-400.png` | Cita con fecha pasada → 400 — matriz #12 |
+| `16-filtro-vet.png` | Filtro de citas por veterinario → 200 con coincidencias — matriz #14 |
+| `17-vet-admin-201.png` | POST `/api/veterinarios` con ADMIN → 201 — matriz #7 |
 | `matriz-15-pruebas.txt` | Salida cruda de las 15 pruebas con estados HTTP y SQL de verificación |
+
+> Las capturas `07` a `17` completan la matriz de pruebas; la prueba #15 (reinicio con datos persistentes) queda documentada en `matriz-15-pruebas.txt` y en la sección de resultados de arriba.
 
 Cada captura describe con texto qué se observa; los mensajes de error no dependen del color y nunca aparecen contraseñas ni tokens completos.
 
